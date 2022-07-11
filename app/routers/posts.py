@@ -38,7 +38,6 @@ async def update_post(updated_post: schemas.PostUpdate, current_user:schemas.Use
     
     db_query = db.query(models.Post).filter(models.Post.id == updated_post.id)
     db_post = db_query.first()
-    print(db_post.owner_id)
     if db_post.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You do not have permission to update this post")
     post = db_query.update(updated_post.dict(),synchronize_session=False)
@@ -49,8 +48,7 @@ async def update_post(updated_post: schemas.PostUpdate, current_user:schemas.Use
 async def delete_post(id:int, db:Session = Depends(get_db),current_user:schemas.User = Depends(Oauth2.get_current_user)):
     
     post = db.query(models.Post).filter(models.Post.id == id).first()
-    print(post.owner_id)
-    print(current_user.id)
+
     if post.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You dont have permission to delete this post")
     db.delete(post)
