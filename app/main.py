@@ -2,7 +2,7 @@ from tokenize import String
 from typing import List, Optional
 from fastapi import Body, Depends, FastAPI,Response, status, HTTPException,APIRouter
 from pydantic import BaseModel
-from routers import posts, users, auth
+from routers import posts, users, auth, votes
 
 
 import utils 
@@ -17,6 +17,7 @@ app = FastAPI()
 app.include_router(posts.router, prefix="/posts", tags=["Posts"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(auth.router, prefix="/login", tags=["Auth"])
+app.include_router(votes.router, prefix="/votes", tags=["Votes"])
 @app.get("/")
 async def root():
     return {"status": "200"}

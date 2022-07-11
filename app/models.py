@@ -1,6 +1,7 @@
 import datetime
 from email.policy import default
 from time import timezone
+from turtle import pos
 from sqlalchemy import TIMESTAMP, Boolean, Column, Date, ForeignKey, Integer, String, null, text
 from sqlalchemy.orm import relationship
 
@@ -16,6 +17,7 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone =True), nullable=False, server_default=text('now()'))
 
     posts = relationship("Post", back_populates="owner")
+    votes = relationship("Vote", back_populates="user")
 
 
 class Post(Base):
@@ -29,3 +31,12 @@ class Post(Base):
     created_at = Column(TIMESTAMP(timezone =True), nullable=False, server_default=text('now()'))
 
     owner = relationship("User", back_populates="posts")
+    votes = relationship("Vote", back_populates="post")
+
+class Vote(Base):
+    __tablename__ = "votes"
+    user_id = Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), primary_key=True)
+    post_id = Column(Integer, ForeignKey("posts.id",ondelete="CASCADE"), primary_key=True)
+    
+    user  = relationship("User", back_populates="votes")
+    post = relationship("Post", back_populates="votes")

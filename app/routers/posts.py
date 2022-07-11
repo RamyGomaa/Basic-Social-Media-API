@@ -1,6 +1,7 @@
 from turtle import pos
 from webbrowser import get
 from fastapi import APIRouter, Depends, Response, status, HTTPException, APIRouter
+from sqlalchemy import func
 
 from sqlalchemy.orm import Session
 from database import get_db
@@ -11,9 +12,11 @@ import Oauth2
 
 router = APIRouter()
 
-@router.get("/",response_model=List[schemas.Post])
-async def getPosts(db:Session = Depends(get_db)):
-    return db.query(models.Post).all()
+@router.get("/",response_model=List[schemas.PostFull])
+async def getPosts(db:Session = Depends(get_db),limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    posts= db.query(models.Post, func.count(models.Vote.post_id).label("voteCount")).join(models.Vote, models.Post.id == models.Vote.post_id,  isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    return posts
+
 
 @router.get("/{id}",response_model=schemas.Post)
 async def getPost(id:int, response:Response, db:Session = Depends(get_db)):
@@ -40,7 +43,7 @@ async def update_post(updated_post: schemas.PostUpdate, current_user:schemas.Use
     db_post = db_query.first()
     if db_post.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You do not have permission to update this post")
-    post = db_query.update(updated_post.dict(),synchronize_session=False)
+    db_query.update(updated_post.dict(),synchronize_session=False)
     db.commit()
     return db_query.first()
 

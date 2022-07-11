@@ -1,7 +1,24 @@
 from typing import List, Optional
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, conint
 
+
+
+
+
+
+
+class Vote(BaseModel):
+    post_id: int
+
+    class Config:
+        orm_mode = True
+        
+class PostVote(BaseModel):
+    user_id: int
+
+    class Config:
+        orm_mode = True
 
 class PostBase(BaseModel):
     title: str
@@ -29,6 +46,15 @@ class Post(PostBase):
     id:int  
     created_at: datetime
     owner:UserOut
+    votes: List[PostVote] = []
+    
+class PostFull(BaseModel):
+    Post:Post
+    voteCount:int
+    class Config:
+        orm_mode = True
+
+
     
 class UserCreate(UserBase):
     hashed_password :str
@@ -51,3 +77,4 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+    
