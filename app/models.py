@@ -1,7 +1,6 @@
 import datetime
 from email.policy import default
 from time import timezone
-from turtle import pos
 from sqlalchemy import TIMESTAMP, Boolean, Column, Date, ForeignKey, Integer, String, null, text
 from sqlalchemy.orm import relationship
 
