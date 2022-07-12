@@ -1,5 +1,4 @@
-from turtle import pos
-from webbrowser import get
+
 from fastapi import APIRouter, Depends, Response, status, HTTPException, APIRouter
 from sqlalchemy import func
 
