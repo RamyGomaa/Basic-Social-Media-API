@@ -13,7 +13,8 @@ import app.database as database
 config = context.config
 
 # you need to do the following four lines
-config.set_main_option("sqlalchemy.url",  database.SQLALCHEMY_DATABASE_URL) #1
+config.set_main_option("sqlalchemy.url",  f"{settings.DATABASE_DRIVER}://{settings.DATABASE_USERNAME}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOSTNAME}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}"
+) #1
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

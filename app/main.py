@@ -1,19 +1,32 @@
-from tokenize import String
-from typing import List, Optional
-from fastapi import Body, Depends, FastAPI,Response, status, HTTPException,APIRouter
-from pydantic import BaseModel
-from routers import posts, users, auth, votes
 
 
-import utils 
-import models, schemas
-from database import get_db, engine
+from fastapi import Body, Depends, FastAPI
 
-models.Base.metadata.create_all(bind=engine)
+from app.routers import posts, users, auth, votes
+from fastapi.middleware.cors import CORSMiddleware
 
+
+import app.models as models
+from app.database import  engine
+
+#we dont need this now, since we are using alembic
+#models.Base.metadata.create_all(bind=engine)
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(posts.router, prefix="/posts", tags=["Posts"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(auth.router, prefix="/login", tags=["Auth"])

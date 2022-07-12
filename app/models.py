@@ -5,17 +5,19 @@ from turtle import pos
 from sqlalchemy import TIMESTAMP, Boolean, Column, Date, ForeignKey, Integer, String, null, text
 from sqlalchemy.orm import relationship
 
-from database import Base
+from .database import Base as base
+
+Base = base
 
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String,nullable=False)
     created_at = Column(TIMESTAMP(timezone =True), nullable=False, server_default=text('now()'))
-
     posts = relationship("Post", back_populates="owner")
     votes = relationship("Vote", back_populates="user")
 

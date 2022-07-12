@@ -6,10 +6,10 @@ from fastapi import Depends, status, HTTPException
 from jose import jwt
 from fastapi.security import OAuth2PasswordBearer
 from typing import List, Optional
-import schemas, models
+import app.schemas as schemas, app.models as models
 from sqlalchemy.orm import Session
-from database import get_db
-from config import settings
+from app.database import get_db
+from app.config import settings
 # This is the secret key used to sign the JWT
 #I Created The secret key using the following command: openssl rand -hex 32
 #if it wasn't recognized, then go to the location where you installd openssl and run the command again.

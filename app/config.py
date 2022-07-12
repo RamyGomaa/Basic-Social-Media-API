@@ -1,7 +1,6 @@
 from pydantic import BaseSettings
 
 class Settings(BaseSettings):
-   
     DATABASE_DRIVER: str 
     DATABASE_HOSTNAME: str 
     DATABASE_PORT: int 

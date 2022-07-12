@@ -35,7 +35,7 @@ class PostCreate(PostBase):
         
 class UserBase(BaseModel):
     email:EmailStr
-    
+    name:Optional[str]
     class Config:
         orm_mode = True
 
